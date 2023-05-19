@@ -5,9 +5,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import GoogleLogin from "../components/GoogleLogin";
 import NavbarPage from "../components/NavbarPage";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { register } from "../redux/actions/authActions";
 
 function Register() {
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,38 +20,13 @@ function Register() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      let data = JSON.stringify({
-        name,
-        email,
-        password,
-      });
+    let data = JSON.stringify({
+      name,
+      email,
+      password,
+    });
 
-      let config = {
-        method: "post",
-        url: `${process.env.REACT_APP_API_KEY}/v1/auth/register`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
-
-      const response = await axios.request(config);
-      const { token } = response.data.data;
-
-      localStorage.setItem("token", token);
-
-      // navigate("/");
-
-      // Temporary solution
-      window.location.href = "/";
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response.data.message);
-        return;
-      }
-      toast.error(error.message);
-    }
+    dispatch(register(data, navigate));
   };
 
   return (

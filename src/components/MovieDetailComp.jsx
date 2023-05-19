@@ -4,31 +4,18 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import NavbarPage from "../components/NavbarPage";
 import { MdStarOutline, MdMovie } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { getMovieDetails } from "../redux/actions/postActions";
 
 function MovieDetailComp() {
-  const [movie, setMovie] = useState({});
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const params = useParams();
 
-  useEffect(() => {
-    async function fetchPost() {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${params.id}?api_key=3f5a55bd4c41a28d6071f4375ca61211&language=en-US`
-        );
-        setMovie(response.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        alert(error);
-      }
-    }
+  const { movieDetails } = useSelector((state) => state.post);
 
-    if (params?.id) {
-      fetchPost();
-    }
-  }, [params]);
+  useEffect(() => {
+    dispatch(getMovieDetails(params));
+  }, [dispatch, params]);
   const divStyle = {
     display: "flex",
     alignItems: "start",
@@ -49,70 +36,68 @@ function MovieDetailComp() {
       </Row>
       <Row>
         <Col>
-          {loading ? (
-            <h1 className="text-center">Loading ...</h1>
-          ) : (
-            <>
-              <div
-                style={{
-                  ...divStyle,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                  display: "grid",
-                  placeItems: "center",
-                  width: "100%",
-                  height: "910px",
-                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5) 100%, rgba(0, 0, 0, 0)100%),url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
-                }}
+          <>
+            <div
+              style={{
+                ...divStyle,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                display: "grid",
+                placeItems: "center",
+                width: "100%",
+                height: "910px",
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5) 100%, rgba(0, 0, 0, 0)100%),url(https://image.tmdb.org/t/p/original/${movieDetails.backdrop_path})`,
+              }}
+            >
+              <span
+                style={{ spanStyle, color: "White", textAlign: "start" }}
+                className="mx-5"
               >
-                <span
-                  style={{ spanStyle, color: "White", textAlign: "start" }}
-                  className="mx-5"
-                >
-                  <Row>
-                    <Col className="col-md-6 my-2">
-                      <h1 style={{ fontSize: "80px" }}>
-                        {movie.original_title}
-                      </h1>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-md-6 my-2">
-                      <p>
-                        {movie?.genres?.map((genre) => genre.name).join(", ")}
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-md-6 my-2">
-                      <p>{movie.overview}</p>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-md-6 my-2">
-                      <h5>
-                        <MdStarOutline
-                          style={{ color: "yellow" }}
-                          className="mx-2"
-                        />
-                        {movie.vote_average} / 10
-                      </h5>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-md-6 my-3">
-                      <Button className="bg-danger border-0 rounded-5">
-                        <h6 className="mx-1 my-2">
-                          <MdMovie /> Watch Trailer
-                        </h6>
-                      </Button>
-                    </Col>
-                  </Row>
-                </span>
-              </div>
-            </>
-          )}
+                <Row>
+                  <Col className="col-md-6 my-2">
+                    <h1 style={{ fontSize: "80px" }}>
+                      {movieDetails.original_title}
+                    </h1>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="col-md-6 my-2">
+                    <p>
+                      {movieDetails?.genres
+                        ?.map((genre) => genre.name)
+                        .join(", ")}
+                    </p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="col-md-6 my-2">
+                    <p>{movieDetails.overview}</p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="col-md-6 my-2">
+                    <h5>
+                      <MdStarOutline
+                        style={{ color: "yellow" }}
+                        className="mx-2"
+                      />
+                      {movieDetails.vote_average} / 10
+                    </h5>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="col-md-6 my-3">
+                    <Button className="bg-danger border-0 rounded-5">
+                      <h6 className="mx-1 my-2">
+                        <MdMovie /> Watch Trailer
+                      </h6>
+                    </Button>
+                  </Col>
+                </Row>
+              </span>
+            </div>
+          </>
         </Col>
       </Row>
     </Fragment>

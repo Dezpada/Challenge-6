@@ -8,45 +8,49 @@ import NoTokenAccess from "./components/NoTokenAccess";
 import Protected from "./components/Protected";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 function App() {
   return (
-    <GoogleOAuthProvider
-      clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
-    >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/movie/:id"
-            element={
-              <Protected>
-                <MovieDetail />
-              </Protected>
-            }
-          />
+    <Provider store={store}>
+      <GoogleOAuthProvider
+        clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/movie/:id"
+              element={
+                <Protected>
+                  <MovieDetail />
+                </Protected>
+              }
+            />
 
-          <Route
-            path="/login"
-            element={
-              <NoTokenAccess>
-                <Login />
-              </NoTokenAccess>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <NoTokenAccess>
-                <Register />
-              </NoTokenAccess>
-            }
-          />
-          <Route path="/search/:name" element={<SearchPage />} />
-        </Routes>
-        <ToastContainer theme="colored" />
-      </BrowserRouter>
-    </GoogleOAuthProvider>
+            <Route
+              path="/login"
+              element={
+                <NoTokenAccess>
+                  <Login />
+                </NoTokenAccess>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <NoTokenAccess>
+                  <Register />
+                </NoTokenAccess>
+              }
+            />
+            <Route path="/search/:name" element={<SearchPage />} />
+          </Routes>
+          <ToastContainer theme="colored" />
+        </BrowserRouter>
+      </GoogleOAuthProvider>
+    </Provider>
   );
 }
 
