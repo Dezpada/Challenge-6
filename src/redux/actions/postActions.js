@@ -1,5 +1,9 @@
 import axios from "axios";
-import { setMovies, setMovieDetails } from "../reducers/postReducers";
+import {
+  setMovies,
+  setMovieDetails,
+  setSearchedMovies,
+} from "../reducers/postReducers";
 import { toast } from "react-toastify";
 
 export const getAllMovies = () => async (dispatch) => {
@@ -23,6 +27,21 @@ export const getMovieDetails = (params) => async (dispatch) => {
       `https://api.themoviedb.org/3/movie/${params.id}?api_key=3f5a55bd4c41a28d6071f4375ca61211&language=en-US`
     );
     dispatch(setMovieDetails(response.data));
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.response.data.message);
+      return;
+    }
+    toast.error(error.message);
+  }
+};
+
+export const getSearchedMovies = (params) => async (dispatch) => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?api_key=3f5a55bd4c41a28d6071f4375ca61211&query=${params.name}`
+    );
+    dispatch(setSearchedMovies(response.data.results));
   } catch (error) {
     if (axios.isAxiosError(error)) {
       toast.error(error.response.data.message);

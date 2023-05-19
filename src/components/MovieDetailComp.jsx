@@ -1,7 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import NavbarPage from "../components/NavbarPage";
 import { MdStarOutline, MdMovie } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
