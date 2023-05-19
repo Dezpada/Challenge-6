@@ -1,3 +1,9 @@
+## What's New?
+
+### `Challenge-6:1.1`
+
+Making Redux for **Search**
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
